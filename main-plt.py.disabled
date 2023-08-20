@@ -1,0 +1,49 @@
+import pyplot as plt
+
+# 初始化位置和速度
+positions = [[-200, 0], [200, 0], [0, 300]]
+velocities = [[0.1, 0], [-0.1, 0], [0, -0.15]]
+
+# 模拟参数设置
+num_iterations = 1000  # 模拟的迭代次数
+dt = 0.1  # 时间步长
+
+# 记录每个位置的历史记录
+history = [[] for _ in range(3)]
+for i in range(3):
+    history[i].append(positions[i].copy())
+
+# 进行模拟
+for _ in range(num_iterations):
+    for j in range(3):
+        acceleration = [0, 0]
+        for k in range(3):
+            if j != k:
+                dx = positions[k][0] - positions[j][0]
+                dy = positions[k][1] - positions[j][1]
+                r = (dx ** 2 + dy ** 2) ** 1.5
+                acceleration[0] += dx / r
+                acceleration[1] += dy / r
+        
+        velocities[j][0] += acceleration[0] * dt
+        velocities[j][1] += acceleration[1] * dt
+        positions[j][0] += velocities[j][0] * dt
+        positions[j][1] += velocities[j][1] * dt
+
+        history[j].append(positions[j].copy())
+
+# 绘制图像
+fig, ax = plt.subplots()
+ax.set_aspect('equal')
+colors = ['r', 'g', 'b']
+
+for i in range(3):
+    x = [pos[0] for pos in history[i]]
+    y = [pos[1] for pos in history[i]]
+    ax.plot(x, y, color=colors[i])
+
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Three-body motion simulation')
+
+plt.show()

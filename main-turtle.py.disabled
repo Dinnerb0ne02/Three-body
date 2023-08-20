@@ -1,0 +1,43 @@
+import turtle
+
+# 初始化画布和画笔
+screen = turtle.Screen()
+screen.title("Three-body motion simulation")
+screen.bgcolor("white")
+screen.setup(width=800, height=600)
+pen = turtle.Turtle()
+pen.speed(100)
+pen.penup()
+
+# 初始位置和速度
+positions = [[-200, 0], [200, 0], [0, 300]]
+velocities = [[0.1, 0], [-0.1, 0], [0, -0.15]]
+
+# 模拟参数设置
+num_iterations = 200000  # 模拟的迭代次数
+dt = 0.1  # 时间步长
+
+# 进行模拟
+for i in range(num_iterations):
+    for j in range(3):
+        x, y = positions[j]
+        pen.goto(x, y)
+        pen.dot(10, "black")
+
+        # 计算加速度
+        acceleration = [0, 0]
+        for k in range(3):
+            if j != k:
+                dx = positions[k][0] - x
+                dy = positions[k][1] - y
+                r = (dx ** 2 + dy ** 2) ** 1.5
+                acceleration[0] += dx / r
+                acceleration[1] += dy / r
+
+        # 更新速度和位置
+        velocities[j][0] += acceleration[0] * dt
+        velocities[j][1] += acceleration[1] * dt
+        positions[j][0] += velocities[j][0] * dt
+        positions[j][1] += velocities[j][1] * dt
+
+turtle.done()
